@@ -1,0 +1,5 @@
+name;surname;mail;username;password;role
+a;;abc@abc.com;a;asd;user
+ahmet;yıldırım;ayildirim@hotmail.com;ahmet123;ahmet;user
+furkan;;furkan@furkan.com;kufarn;furkan123;admin
+mehmet;yolcu;yolcumehmet@outlook.com;yolcu57;123456;user
