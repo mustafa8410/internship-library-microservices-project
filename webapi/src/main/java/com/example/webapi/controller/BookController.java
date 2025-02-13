@@ -28,7 +28,9 @@ public class BookController {
 
     @GetMapping
     @ResponseStatus(HttpStatus.FOUND)
-    public List<BookResponse> findBooks(@RequestParam Optional<String> title, @RequestParam Optional<String> author, @RequestParam Optional<Long> bookcaseId, @RequestParam Optional<String> showRented){
+    public List<BookResponse> findBooks(@RequestParam Optional<String> title, @RequestParam Optional<String> author,
+                                        @RequestParam Optional<Long> bookcaseId,
+                                        @RequestParam Optional<String> showRented){
         return bookService.findBooks(title, author, bookcaseId, showRented);
     }
 
@@ -46,7 +48,9 @@ public class BookController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public BookResponse createBook(@RequestBody CreateBookRequest createBookRequest, @RequestParam (defaultValue = "true") String place, @RequestParam Optional<Long> bookcaseId){
+    public BookResponse createBook(@RequestBody CreateBookRequest createBookRequest,
+                                   @RequestParam (defaultValue = "true") String place,
+                                   @RequestParam Optional<Long> bookcaseId){
         return bookService.createBook(createBookRequest, place, bookcaseId);
     }
 

@@ -26,11 +26,13 @@ public class SendRemindersAsync {
 
     @Async
     public Future<Boolean> sendRemindersAsynchronously(Rented expired){
-        log.info("Started async job for rental id: " + expired.getId() + " --- Currently sending mail for: Rent id: "+ expired.getId() + ", User email: " + expired.getRenter().getMail());
+        log.info("Started async job for rental id: " + expired.getId() + " --- Currently sending mail for: Rent id: "+
+                expired.getId() + ", User email: " + expired.getRenter().getMail());
         String title, message;
         title = ("About The Expiration Of Your Rental: " + expired.getBook().getTitle());
         message = "Hello " + expired.getRenter().getName() + ",\nWe want to remind you that your rental of" +
-                " the book " + expired.getBook().getTitle() + " is expired. We are expecting you to return the book as soon as possible.";
+                " the book " + expired.getBook().getTitle() +
+                " is expired. We are expecting you to return the book as soon as possible.";
         try{
             mailService.sendMail(expired.getRenter().getMail(), title, message);
         }
@@ -38,7 +40,8 @@ public class SendRemindersAsync {
             throw new MailNotSentException();
         }
         markRentAsAlerted(expired);
-        log.info("Email sent to " + expired.getRenter().getMail() + " for rent id: " + expired.getId() + " successfully.");
+        log.info("Email sent to " + expired.getRenter().getMail() + " for rent id: " +
+                expired.getId() + " successfully.");
         return new AsyncResult<>(true);
     }
 

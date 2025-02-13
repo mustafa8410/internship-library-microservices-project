@@ -1,6 +1,6 @@
 package com.example.batch.entity;
 
-import com.example.batch.excel.BookcaseExcel;
+import com.example.batch.excel.csvinput.BookcaseExcel;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 

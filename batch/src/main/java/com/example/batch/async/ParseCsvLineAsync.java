@@ -1,13 +1,11 @@
 package com.example.batch.async;
 
-import com.example.batch.excel.BookExcel;
-import com.example.batch.excel.BookcaseExcel;
-import com.example.batch.excel.EntityType;
-import com.example.batch.excel.UserExcel;
-import com.example.batch.exception.csv.InvalidCsvLineException;
-import com.example.batch.service.CsvService;
+import com.example.batch.excel.csvinput.BookExcel;
+import com.example.batch.excel.csvinput.BookcaseExcel;
+import com.example.batch.excel.csvinput.UserExcel;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.annotation.Async;
+import com.example.batch.service.CsvService;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -25,36 +23,44 @@ public class ParseCsvLineAsync {
 
     @Async
     public CompletableFuture<Boolean> parseBookLineAndSaveInstance(List<String> line){
-        try {
-            BookExcel bookExcel = new BookExcel(line);
-            csvService.parseBookLineAndSaveInstance(bookExcel);
-        }
-        catch (Exception e) {
-            log.error(e.getMessage() + String.join(";", line));
-        }
-        return CompletableFuture.completedFuture(true);
+        return CompletableFuture.supplyAsync( () -> {
+            try {
+                BookExcel bookExcel = new BookExcel(line);
+                csvService.parseBookLineAndSaveInstance(bookExcel);
+            }
+            catch (Exception e) {
+                log.error(e.getMessage() + String.join(";", line));
+            }
+            return true;
+        } );
+
     }
     @Async
     public CompletableFuture<Boolean> parseBookcaseLineAndSaveInstance(List<String> line){
-        try {
-            BookcaseExcel bookcaseExcel = new BookcaseExcel(line);
-            csvService.parseBookcaseLineAndSaveInstance(bookcaseExcel);
-        }
-        catch (Exception e) {
-            log.error(e.getMessage() + String.join(";", line));
-        }
-        return CompletableFuture.completedFuture(true);
+        return CompletableFuture.supplyAsync(() -> {
+            try {
+                BookcaseExcel bookcaseExcel = new BookcaseExcel(line);
+                csvService.parseBookcaseLineAndSaveInstance(bookcaseExcel);
+            }
+            catch (Exception e) {
+                log.error(e.getMessage() + String.join(";", line));
+            }
+            return true;
+        });
     }
     @Async
     public CompletableFuture<Boolean> parseUserLineAndSaveInstance(List<String> line){
-        try {
-            UserExcel userExcel = new UserExcel(line);
-            csvService.parseUserLineAndSaveInstance(userExcel);
-        }
-        catch (Exception e) {
-            log.error(e.getMessage() + String.join(";", line));
-        }
-        return CompletableFuture.completedFuture(true);
+        return CompletableFuture.supplyAsync(() -> {
+            try {
+                UserExcel userExcel = new UserExcel(line);
+                csvService.parseUserLineAndSaveInstance(userExcel);
+            }
+            catch (Exception e) {
+                log.error(e.getMessage() + String.join(";", line));
+            }
+            return true;
+        });
+
     }
     /*@Async
     public CompletableFuture<Boolean> parseRentLineAndSaveInstance(List<String> line){

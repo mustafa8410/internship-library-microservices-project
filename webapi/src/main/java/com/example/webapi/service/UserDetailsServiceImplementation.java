@@ -25,8 +25,10 @@ public class UserDetailsServiceImplementation implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        User user = userRepository.findByUsername(username).orElseThrow(() -> new UsernameNotFoundException("A user corresponding to the provided token could not be found."));
-        return new JwtUserDetails(user.getUsername(), user.getPassword(), Collections.singletonList(new SimpleGrantedAuthority(user.getRole())));
+        User user = userRepository.findByUsername(username).orElseThrow(() -> new UsernameNotFoundException
+                ("A user corresponding to the provided token could not be found."));
+        return new JwtUserDetails(user.getUsername(), user.getPassword(), Collections.singletonList
+                (new SimpleGrantedAuthority(user.getRole())));
     }
 
     public void verifyUser(User userInstance){

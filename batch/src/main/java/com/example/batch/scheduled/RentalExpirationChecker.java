@@ -31,8 +31,10 @@ public class RentalExpirationChecker {
     @Scheduled(cron = "0 0 12 * * *")
     public void sendReminders() throws Exception{
         log.info("Scheduled operation of sendReminders() has started.");
-        List<Rented> nonRemindedExpiredRentals = rentedRepository.findAllByEndDateBeforeAndAlertSentIsFalse(Date.from(Instant.now()));
-        log.info("Extracted all the expired rents with none alert sent. Total amount: " + nonRemindedExpiredRentals.size());
+        List<Rented> nonRemindedExpiredRentals = rentedRepository.
+                findAllByEndDateBeforeAndAlertSentIsFalse(Date.from(Instant.now()));
+        log.info("Extracted all the expired rents with none alert sent. Total amount: " +
+                nonRemindedExpiredRentals.size());
         // String title, message;
         log.info("Going through each of the expired rents and sending reminders...");
         Collection<Future<Boolean>> asyncList = new ArrayList<>();

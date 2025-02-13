@@ -27,7 +27,9 @@ public class AuthService {
     private final JwtTokenProvider jwtTokenProvider;
     private final UserService userService;
 
-    public AuthService(UserDetailsServiceImplementation userDetailsServiceImplementation, AuthenticationManager authenticationManager, UserRepository userRepository, JwtTokenProvider jwtTokenProvider, UserService userService) {
+    public AuthService(UserDetailsServiceImplementation userDetailsServiceImplementation,
+                       AuthenticationManager authenticationManager, UserRepository userRepository,
+                       JwtTokenProvider jwtTokenProvider, UserService userService) {
         this.userDetailsServiceImplementation = userDetailsServiceImplementation;
         this.authenticationManager = authenticationManager;
         this.userRepository = userRepository;
@@ -39,7 +41,9 @@ public class AuthService {
         String username = authLoginRequest.getUsername();
         JwtUserDetails userDetails = (JwtUserDetails) userDetailsServiceImplementation.loadUserByUsername(username);
         try {
-            SecurityContextHolder.getContext().setAuthentication(authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(userDetails.getUsername(), authLoginRequest.getPassword(), userDetails.getAuthorities())));
+            SecurityContextHolder.getContext().setAuthentication(authenticationManager
+                    .authenticate(new UsernamePasswordAuthenticationToken(userDetails.getUsername(),
+                            authLoginRequest.getPassword(), userDetails.getAuthorities())));
         }
         catch (BadCredentialsException e){
             throw new IncorrectPasswordException();
@@ -49,7 +53,9 @@ public class AuthService {
     }
 
     public AuthResponse register(AuthRegisterRequest authRegisterRequest){
-        CreateUserRequest userRequest = new CreateUserRequest(authRegisterRequest.getName(), authRegisterRequest.getSurname(), authRegisterRequest.getMail(), authRegisterRequest.getUsername(), authRegisterRequest.getPassword(), "user");
+        CreateUserRequest userRequest = new CreateUserRequest(authRegisterRequest.getName(),
+                authRegisterRequest.getSurname(), authRegisterRequest.getMail(), authRegisterRequest.getUsername(),
+                authRegisterRequest.getPassword(), "user");
         User newUser = userService.createUser(userRequest);
         return new AuthResponse(newUser.getId(), jwtTokenProvider.generateTokenWithUser(newUser));
     }

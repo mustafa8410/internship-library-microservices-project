@@ -1,10 +1,10 @@
 package com.example.batch.scheduled;
 
 import com.example.batch.async.ParseCsvLineAsync;
-import com.example.batch.entity.User;
-import com.example.batch.excel.*;
-import com.example.batch.exception.csv.InvalidCsvFileException;
-import com.example.batch.exception.csv.InvalidCsvLineException;
+import com.example.batch.excel.CsvFileMapping;
+import com.example.batch.excel.FieldName;
+import com.example.batch.excel.csvinput.*;
+import com.example.batch.exception.csv.load.InvalidCsvLineException;
 import com.opencsv.CSVParser;
 import com.opencsv.CSVParserBuilder;
 import com.opencsv.CSVReader;
@@ -16,7 +16,6 @@ import org.springframework.stereotype.Component;
 
 import java.io.File;
 import java.io.FileReader;
-import java.io.IOException;
 import java.lang.reflect.Field;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -30,18 +29,18 @@ import java.util.stream.Collectors;
 
 @Component
 @Slf4j
-public class CsvChecker {
+public class ReadCsvChecker {
 
-    @Value("${book.read.path}")
+    @Value("${csv.read.path}")
     private String csvPath;
 
     private final ParseCsvLineAsync parseCsvLineAsync;
 
-    public CsvChecker(ParseCsvLineAsync parseCsvLineAsync) {
+    public ReadCsvChecker(ParseCsvLineAsync parseCsvLineAsync) {
         this.parseCsvLineAsync = parseCsvLineAsync;
     }
 
-    @Scheduled(cron = "0 25 10 * * *")
+    @Scheduled(cron = "0 0 13 * * *")
     public void checkForCsv(){
         File folder = new File(Paths.get(System.getProperty("user.dir"), csvPath).normalize().toString());
         log.info("Started the scheduled check for .csv files for new book entries at: " + folder.getAbsolutePath());
@@ -61,7 +60,8 @@ public class CsvChecker {
                         log.info("File " + file.getName() + " has been deleted.");
                     }
                     catch (Exception e) {
-                        log.error("Exception happened while trying to delete the processed file: " + file.getName() + " at: " + file.getAbsolutePath(), e);
+                        log.error("Exception happened while trying to delete the processed file: " +
+                                file.getName() + " at: " + file.getAbsolutePath(), e);
                     }
                 }
                 catch (Exception e) {
@@ -112,7 +112,8 @@ public class CsvChecker {
         CompletableFuture.allOf(asyncList.toArray(new CompletableFuture[0])).join();*/
         Class<?> clazz = getEntityTypeFromHeader(lines.get(0));
         if(clazz == null)
-            throw new InvalidCsvLineException();
+            throw new InvalidCsvLineException("Header of the .csv file does not match with any of the" +
+                    " available entities.");
         //List<CompletableFuture<Boolean>> asyncList = new ArrayList<>();
         if(clazz == BookExcel.class)
             callBookAsync(lines);
@@ -150,10 +151,7 @@ public class CsvChecker {
     }*/
 
     private Class<?> getEntityTypeFromHeader(List<String> header) {
-        List<Class<?>> classList = new ArrayList<>();
-        classList.add(BookExcel.class);
-        classList.add(BookcaseExcel.class);
-        classList.add(UserExcel.class);
+        List<Class<?>> classList = new CsvInputClassHolder().getClasses();
         for(Class<?> clazz: classList) {
             if(verifyHeadersForClass(clazz, header))
                 return clazz;

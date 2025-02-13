@@ -29,7 +29,9 @@ public enum EntityType {
         return Optional.empty();
     }
 
-    public static boolean confirmEntityTypeForHeader(EntityType entityType, List<String> header){ //these two now have the same size, because if not then the first check in the if condition would not pass anyways
+    public static boolean confirmEntityTypeForHeader(EntityType entityType, List<String> header){
+        //these two now have the same size, because if not then the first check in the if condition
+        // would not pass anyways
         int i;
         for(i=0; i<header.size(); i++) {
             if(!entityType.getFieldNames()[i].findStringInVariations(header.get(i), entityType.getFieldNames()[i]))

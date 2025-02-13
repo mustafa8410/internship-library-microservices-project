@@ -29,7 +29,9 @@ public class SecurityConfiguration {
 
     private final JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint;
 
-    public SecurityConfiguration(UserDetailsServiceImplementation userDetailsServiceImplementation, JwtAuthenticationFilter jwtAuthenticationFilter, JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint) {
+    public SecurityConfiguration(UserDetailsServiceImplementation userDetailsServiceImplementation,
+                                 JwtAuthenticationFilter jwtAuthenticationFilter,
+                                 JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint) {
         this.userDetailsServiceImplementation = userDetailsServiceImplementation;
         this.jwtAuthenticationFilter = jwtAuthenticationFilter;
         this.jwtAuthenticationEntryPoint = jwtAuthenticationEntryPoint;
@@ -39,17 +41,22 @@ public class SecurityConfiguration {
     SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception{
         return httpSecurity.cors().and().csrf().disable()
                 .authorizeRequests()
-                .antMatchers(HttpMethod.POST, "/bookcase/**", "/book/**", "/user/**").hasAnyAuthority("admin")
-                .antMatchers(HttpMethod.PUT, "/bookcase/**", "/book/**").hasAnyAuthority("admin")
-                .antMatchers(HttpMethod.DELETE, "/bookcase/**", "/book/**").hasAnyAuthority("admin")
+                .antMatchers(HttpMethod.POST, "/bookcase/**", "/book/**", "/user/**")
+                .hasAnyAuthority("admin")
+                .antMatchers(HttpMethod.PUT, "/bookcase/**", "/book/**")
+                .hasAnyAuthority("admin")
+                .antMatchers(HttpMethod.DELETE, "/bookcase/**", "/book/**")
+                .hasAnyAuthority("admin")
                 .antMatchers("/auth/**").permitAll()
                 .antMatchers(HttpMethod.GET, "/book").permitAll()
                 .antMatchers(HttpMethod.GET, "/book/count").hasAnyAuthority("admin")
                 .anyRequest().authenticated()
                 .and().addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
                 .formLogin(AbstractAuthenticationFilterConfigurer::disable)
-                .sessionManagement(httpSecuritySessionManagementConfigurer -> httpSecuritySessionManagementConfigurer.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-                .exceptionHandling(httpSecurityExceptionHandlingConfigurer -> httpSecurityExceptionHandlingConfigurer.authenticationEntryPoint(jwtAuthenticationEntryPoint))
+                .sessionManagement(httpSecuritySessionManagementConfigurer -> httpSecuritySessionManagementConfigurer
+                        .sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                .exceptionHandling(httpSecurityExceptionHandlingConfigurer -> httpSecurityExceptionHandlingConfigurer
+                        .authenticationEntryPoint(jwtAuthenticationEntryPoint))
                 .build();
     }
 

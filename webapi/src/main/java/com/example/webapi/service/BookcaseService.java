@@ -24,7 +24,8 @@ public class BookcaseService {
     private final BookRepository bookRepository;
     private final BookService bookService;
 
-    public BookcaseService(BookcaseRepository bookcaseRepository, BookRepository bookRepository, BookService bookService) {
+    public BookcaseService(BookcaseRepository bookcaseRepository, BookRepository bookRepository,
+                           BookService bookService) {
         this.bookcaseRepository = bookcaseRepository;
         this.bookRepository = bookRepository;
         this.bookService = bookService;
@@ -53,7 +54,8 @@ public class BookcaseService {
         return bookcaseRepository.save(bookcase);
     }
 
-    public ResponseEntity<UpdateBookcaseResponse> updateBookcaseById(Long bookcaseId, Long newCapacity, Optional<String> redistribute){
+    public ResponseEntity<UpdateBookcaseResponse> updateBookcaseById(Long bookcaseId, Long newCapacity,
+                                                                     Optional<String> redistribute){
         Bookcase bookcase = bookcaseRepository.findById(bookcaseId).orElseThrow(BookcaseNotFoundException::new);
         bookcase.setCapacity(newCapacity);
         List<Book> bookList = bookRepository.findAllByBookcaseId(bookcaseId);
@@ -71,12 +73,14 @@ public class BookcaseService {
                 List<Book> booksToRedistribute = bookList.subList(newCapacity.intValue(), bookList.size());
                 List<Bookcase> bookcaseList = bookcaseRepository.findAllByIdIsNotOrderByCapacityDesc(bookcaseId);
                 ResponseEntity<String> responseEntity = distributeBooksIntoBookcases(booksToRedistribute, bookcaseList);
-                return new ResponseEntity<>(new UpdateBookcaseResponse(bookcase, responseEntity.getBody()), responseEntity.getStatusCode());
+                return new ResponseEntity<>(new UpdateBookcaseResponse(bookcase, responseEntity.getBody()),
+                        responseEntity.getStatusCode());
             }
             else
                 throw new InvalidParameterException();
         }
-        return new ResponseEntity<>(new UpdateBookcaseResponse(bookcaseRepository.save(bookcase), "Updated successfully."), HttpStatus.OK);
+        return new ResponseEntity<>(new UpdateBookcaseResponse(bookcaseRepository.save(bookcase),
+                "Updated successfully."), HttpStatus.OK);
     }
 
     public void distributeBooks(List<Book> bookList, List<Bookcase> bookcaseList){
@@ -86,7 +90,8 @@ public class BookcaseService {
             placed = false;
             while(!placed && bookcaseIndex < bookcaseList.size()){
                 try{
-                    bookService.placeBookIntoBookcaseById(book.getId(), Optional.of(bookcaseList.get(bookcaseIndex).getId()));
+                    bookService.placeBookIntoBookcaseById(book.getId(),
+                            Optional.of(bookcaseList.get(bookcaseIndex).getId()));
                     placed = true;
                 }
                 catch (Exception e){
@@ -94,7 +99,8 @@ public class BookcaseService {
                 }
             }
             if(!placed){
-                throw new AllBookcasesFullException("There was not enough space for all books, some are left undistributed.");
+                throw new AllBookcasesFullException
+                        ("There was not enough space for all books, some are left undistributed.");
             }
         }
     }
@@ -120,7 +126,8 @@ public class BookcaseService {
 
 
     public ResponseEntity<String> deleteBookcaseById(Long bookcaseId, Optional<String> redistributeBooks){
-        if(redistributeBooks.isPresent() && (!redistributeBooks.get().equals("true") && !redistributeBooks.get().equals("false")))
+        if(redistributeBooks.isPresent() && (!redistributeBooks.get().equals("true") &&
+                !redistributeBooks.get().equals("false")))
             throw new InvalidParameterException();
         Bookcase bookcase = bookcaseRepository.findById(bookcaseId).orElseThrow(BookcaseNotFoundException::new);
         List<Book> bookList = bookRepository.findAllByBookcaseId(bookcaseId);

@@ -34,13 +34,16 @@ public class BookService {
         return new BookResponse(bookRepository.findById(bookId).orElseThrow(BookNotFoundException::new));
     }
 
-    public List<BookResponse> findBooks(Optional<String> title, Optional<String> author, Optional<Long> bookcaseId, Optional<String> showRented){
+    public List<BookResponse> findBooks(Optional<String> title, Optional<String> author, Optional<Long> bookcaseId,
+                                        Optional<String> showRented){
         boolean showOnlyUnrentedBooks;
         if(showRented.isPresent() && showRented.get().equals("true"))
             showOnlyUnrentedBooks = false;
         else
             showOnlyUnrentedBooks = true;
-        return bookRepository.findByFilterByTitleAuthorBookcaseId(title.orElse(null), author.orElse(null), bookcaseId.orElse(null), showOnlyUnrentedBooks).stream().map(BookResponse::new).collect(Collectors.toList());
+        return bookRepository.findByFilterByTitleAuthorBookcaseId(title.orElse(null), author.orElse(null),
+                bookcaseId.orElse(null),
+                showOnlyUnrentedBooks).stream().map(BookResponse::new).collect(Collectors.toList());
     }
 
     public Long findCountOfBooks(Optional<Long> bookcaseId){
@@ -68,7 +71,8 @@ public class BookService {
         newBook.setTitle(createBookRequest.getTitle());
         if(placeBook.equals("true")){
             if(bookcaseId.isPresent()){
-                Bookcase bookcase = bookcaseRepository.findById(bookcaseId.get()).orElseThrow(BookcaseNotFoundException::new);
+                Bookcase bookcase = bookcaseRepository.findById(bookcaseId.get())
+                        .orElseThrow(BookcaseNotFoundException::new);
                 Long bookCount = bookRepository.countAllByBookcaseId(bookcaseId.get());
                 if(bookcase.getCapacity() <= bookCount){
                     bookRepository.save(newBook);
@@ -99,8 +103,10 @@ public class BookService {
 
     public BookResponse updateBook(UpdateBookRequest updateBookRequest) {
         Book book = bookRepository.findById(updateBookRequest.getBookId()).orElseThrow(BookNotFoundException::new);
-        if(updateBookRequest.getNewBookcaseId() != null && updateBookRequest.getNewBookcaseId() != book.getBookcase().getId()){
-            Bookcase bookcase = bookcaseRepository.findById(updateBookRequest.getNewBookcaseId()).orElseThrow(BookcaseNotFoundException::new);
+        if(updateBookRequest.getNewBookcaseId() != null &&
+                updateBookRequest.getNewBookcaseId() != book.getBookcase().getId()){
+            Bookcase bookcase = bookcaseRepository.findById(updateBookRequest.getNewBookcaseId())
+                    .orElseThrow(BookcaseNotFoundException::new);
             if(bookRepository.countAllByBookcaseId(bookcase.getId()) < bookcase.getCapacity())
                 book.setBookcase(bookcase);
             else
@@ -115,7 +121,8 @@ public class BookService {
     public BookResponse placeBookIntoBookcaseById(Long bookId, Optional<Long> bookcaseId){
         Book book = bookRepository.findById(bookId).orElseThrow(BookNotFoundException::new);
         if(bookcaseId.isPresent()){
-            Bookcase bookcase = bookcaseRepository.findById(bookcaseId.get()).orElseThrow(BookcaseNotFoundException::new);
+            Bookcase bookcase = bookcaseRepository.findById(bookcaseId.get())
+                    .orElseThrow(BookcaseNotFoundException::new);
             if(bookRepository.countAllByBookcaseId(bookcaseId.get()) < bookcase.getCapacity())
                 book.setBookcase(bookcase);
             else

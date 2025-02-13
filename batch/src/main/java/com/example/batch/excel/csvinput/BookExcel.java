@@ -1,6 +1,8 @@
-package com.example.batch.excel;
+package com.example.batch.excel.csvinput;
 
-import com.example.batch.exception.csv.InvalidCsvLineException;
+import com.example.batch.excel.CsvFileMapping;
+import com.example.batch.excel.FieldName;
+import com.example.batch.exception.csv.load.InvalidCsvLineException;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -21,7 +23,8 @@ public class BookExcel {
 
     public BookExcel(List<String>lines) throws Exception {
         if(lines.size() != 4)
-            throw new InvalidCsvLineException("There must be 4 fields in a book entity but the following line doesn't have that amount: ");
+            throw new InvalidCsvLineException
+                    ("There must be 4 fields in a book entity but the following line doesn't have that amount: ");
         this.title = lines.get(0);
         this.description = lines.get(1);
         this.author = lines.get(2);

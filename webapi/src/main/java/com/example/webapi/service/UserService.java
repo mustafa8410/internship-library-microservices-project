@@ -18,7 +18,8 @@ public class UserService {
     private final PasswordEncoder passwordEncoder;
     private final UserDetailsServiceImplementation userDetailsService;
 
-    public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder, UserDetailsServiceImplementation userDetailsService) {
+    public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder,
+                       UserDetailsServiceImplementation userDetailsService) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
         this.userDetailsService = userDetailsService;
@@ -31,7 +32,8 @@ public class UserService {
     }
 
     public User createUser(CreateUserRequest createUserRequest){
-        if(createUserRequest.getMail().isEmpty() || createUserRequest.getName().isEmpty() || createUserRequest.getPassword().isEmpty() || createUserRequest.getUsername().isEmpty())
+        if(createUserRequest.getMail().isEmpty() || createUserRequest.getName().isEmpty() ||
+                createUserRequest.getPassword().isEmpty() || createUserRequest.getUsername().isEmpty())
             throw new MissingArgumentException();
         if(userRepository.existsByMail(createUserRequest.getMail()))
             throw new UserAlreadyExistsException("A user already uses this mail address.");
@@ -55,9 +57,11 @@ public class UserService {
     public User updateUser(UpdateUserRequest updateUserRequest){
         User user = userRepository.findById(updateUserRequest.getUserId()).orElseThrow(UserNotFoundException::new);
         userDetailsService.verifyUser(user);
-        if(!user.getUsername().equals(updateUserRequest.getNewUsername()) && userRepository.existsByUsername(updateUserRequest.getNewUsername()))
+        if(!user.getUsername().equals(updateUserRequest.getNewUsername()) &&
+                userRepository.existsByUsername(updateUserRequest.getNewUsername()))
             throw new UserAlreadyExistsException("Another user already uses this username.");
-        if(!user.getMail().equals(updateUserRequest.getNewMail()) && userRepository.existsByMail(updateUserRequest.getNewMail()))
+        if(!user.getMail().equals(updateUserRequest.getNewMail()) &&
+                userRepository.existsByMail(updateUserRequest.getNewMail()))
             throw new UserAlreadyExistsException("Another user already uses this username.");
         user.setUsername(updateUserRequest.getNewUsername());
         user.setSurname(updateUserRequest.getNewSurname());

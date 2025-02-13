@@ -38,7 +38,9 @@ public class BookcaseController {
     }
 
     @PutMapping("{id}")
-    public ResponseEntity<UpdateBookcaseResponse> updateBookcaseById(@PathVariable Long id, @RequestParam Long newCapacity, @RequestParam Optional<String> redistribute){
+    public ResponseEntity<UpdateBookcaseResponse> updateBookcaseById(@PathVariable Long id,
+                                                                     @RequestParam Long newCapacity,
+                                                                     @RequestParam Optional<String> redistribute){
         return bookcaseService.updateBookcaseById(id, newCapacity, redistribute);
     }
 
@@ -48,7 +50,8 @@ public class BookcaseController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<String> deleteBookcaseById(@PathVariable Long id, @RequestParam Optional<String> redistributeBooks){
+    public ResponseEntity<String> deleteBookcaseById(@PathVariable Long id,
+                                                     @RequestParam Optional<String> redistributeBooks){
         return bookcaseService.deleteBookcaseById(id, redistributeBooks);
     }
 }

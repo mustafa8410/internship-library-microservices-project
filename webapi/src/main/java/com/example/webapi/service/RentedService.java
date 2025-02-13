@@ -25,7 +25,8 @@ public class RentedService {
     private final BookRepository bookRepository;
     private final UserDetailsServiceImplementation userDetailsService;
 
-    public RentedService(RentedRepository rentedRepository, UserService userService, BookRepository bookRepository, UserDetailsServiceImplementation userDetailsService) {
+    public RentedService(RentedRepository rentedRepository, UserService userService, BookRepository bookRepository,
+                         UserDetailsServiceImplementation userDetailsService) {
         this.rentedRepository = rentedRepository;
         this.userService = userService;
         this.bookRepository = bookRepository;

@@ -9,4 +9,5 @@ import java.util.List;
 public interface RentedRepository extends JpaRepository<Rented, Long> {
     List<Rented> findAllByEndDateBeforeAndAlertSentIsFalse(Date date);
     boolean existsByBookId(Long bookId);
+    List<Rented> findAllSortByOrderByStartDateDesc();
 }

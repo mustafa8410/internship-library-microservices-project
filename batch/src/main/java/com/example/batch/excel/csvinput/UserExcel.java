@@ -1,6 +1,8 @@
-package com.example.batch.excel;
+package com.example.batch.excel.csvinput;
 
-import com.example.batch.exception.csv.InvalidCsvLineException;
+import com.example.batch.excel.CsvFileMapping;
+import com.example.batch.excel.FieldName;
+import com.example.batch.exception.csv.load.InvalidCsvLineException;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -25,7 +27,8 @@ public class UserExcel {
 
     public UserExcel(List<String> lines) throws Exception{
         if(lines.size() != 6)
-            throw new InvalidCsvLineException("There can only be 6 fields in a user instance, but the following line has more or less: ");
+            throw new InvalidCsvLineException
+                    ("There can only be 6 fields in a user instance, but the following line has more or less: ");
         this.name = lines.get(0);
         this.surname = lines.get(1);
         this.mail = lines.get(2);

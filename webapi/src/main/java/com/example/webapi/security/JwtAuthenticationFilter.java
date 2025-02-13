@@ -21,14 +21,17 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     private final UserDetailsServiceImplementation userDetailsServiceImplementation;
     private final JwtAuthenticationEntryPoint authenticationEntryPoint;
 
-    public JwtAuthenticationFilter(JwtTokenProvider jwtTokenProvider, UserDetailsServiceImplementation userDetailsServiceImplementation, JwtAuthenticationEntryPoint authenticationEntryPoint) {
+    public JwtAuthenticationFilter(JwtTokenProvider jwtTokenProvider,
+                                   UserDetailsServiceImplementation userDetailsServiceImplementation,
+                                   JwtAuthenticationEntryPoint authenticationEntryPoint) {
         this.jwtTokenProvider = jwtTokenProvider;
         this.userDetailsServiceImplementation = userDetailsServiceImplementation;
         this.authenticationEntryPoint = authenticationEntryPoint;
     }
 
     @Override
-    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
+    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response,
+                                    FilterChain filterChain) throws ServletException, IOException {
         String header = request.getHeader("Authorization");
         String jwtToken = null;
         if(header != null && header.startsWith("Bearer ")){
@@ -36,13 +39,16 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         }
         if(jwtToken != null){
             if(!jwtTokenProvider.verifyDate(jwtToken)){
-                authenticationEntryPoint.commence(request, response, new JwtTokenExpiredException("Session is expired. Please log in again."));
+                authenticationEntryPoint.commence(request, response,
+                        new JwtTokenExpiredException("Session is expired. Please log in again."));
                 return;
             }
             String username = jwtTokenProvider.extractUsername(jwtToken);
             if(username != null) {
                 UserDetails userDetails = userDetailsServiceImplementation.loadUserByUsername(username);
-                UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken = new UsernamePasswordAuthenticationToken(userDetails.getUsername(), userDetails.getPassword(), userDetails.getAuthorities());
+                UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken =
+                        new UsernamePasswordAuthenticationToken(userDetails.getUsername(),
+                                userDetails.getPassword(), userDetails.getAuthorities());
                 SecurityContextHolder.getContext().setAuthentication(usernamePasswordAuthenticationToken);
             }
         }
