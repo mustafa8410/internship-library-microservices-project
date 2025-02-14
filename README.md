@@ -1,6 +1,6 @@
 # Internship Library Microservices Project
 
-This project is a **Library Management System** developed using the **Microservices Architecture**. The system allows for efficient management of books, users, and loans while maintaining a modular and scalable codebase. Each module is implemented as an independent microservice, sharing a common database for communication and data persistence.
+This project is a **Library Management System** that i developed during my internship using the **Microservices Architecture**. The system allows for efficient management of books, users, and loans while maintaining a modular and scalable codebase. Each module is implemented as an independent microservice, sharing a common database for communication and data persistence.
 
 ---
 
@@ -78,4 +78,4 @@ The Library Management System is built to demonstrate the use of microservices i
 ## Contribution
 Feel free to fork the repository and submit pull requests to contribute to the project. Suggestions and improvements are always welcome.
 
----
+
