@@ -23,7 +23,7 @@ The Library Management System is built to demonstrate the use of microservices i
 - **Programming Language**: Java
 - **Framework**: Spring Boot
 - **Build Tool**: Gradle
-- **Database**: Shared Relational Database (e.g., MySQL or PostgreSQL)
+- **Database**: PostgreSQL
 - **Persistence**: JPA/Hibernate
 
 ---
